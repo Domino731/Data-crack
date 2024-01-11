@@ -16,6 +16,11 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
+# Images
+img_game_over = pygame.image.load("C:\\Users\\Dominik\\Desktop\\projects\\Data-crack\\game-over.png").convert()
+img_game_over = pygame.transform.scale(img_game_over, (SCREEN_WIDTH, SCREEN_HEIGHT))
+img_background = pygame.image.load("C:\\Users\\Dominik\\Desktop\\projects\\Data-crack\\background.png").convert()
+img_background = pygame.transform.scale(img_background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 # Player setup
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -57,10 +62,14 @@ class Game:
         self.current_wall_index = 0
         self.data_walls = create_data_walls()
         self.current_wall = self.data_walls[self.current_wall_index]
-
+        self.is_game_over = False
     def draw_walls(self):
         for wall in self.data_walls:
             wall.draw(screen)
+
+    def draw_game_over(self):
+        if self.is_game_over:
+            screen.blit(img_game_over, (0, 0))
 
     def update(self):
         for wall in self.data_walls:
@@ -86,7 +95,7 @@ class Game:
             if self.current_wall_index < len(self.data_walls):
                 self.current_wall = self.data_walls[self.current_wall_index]
             else:
-                print("GAME OVER")
+                self.is_game_over = True
         else:
             self.reset_walls()
 
@@ -104,11 +113,11 @@ while running:
     game.update()
 
     screen.fill("black")
-    pygame.draw.circle(screen, "yellow", player_pos, 40)
+    screen.blit(img_background,  (0, 0))
     draw_container()
     draw_bridge()
     game.draw_walls()
-
+    game.draw_game_over()
     pygame.display.flip()
     dt = clock.tick(60) / 1000
 
