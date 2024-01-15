@@ -22,12 +22,16 @@ class DataWall():
         self.y1 = y
         self.y2 = y + data_wall_height + space_between_columns
         self.top_y2 = self.y1 + data_wall_height
-        self.bot_y1 = self.y1 + data_wall_height + space_between_columns
+        self.bot_y1 = self.y1 + data_wall_height + (space_between_columns * 2)
 
     def draw(self, screen):
         pygame.draw.rect(screen, "white", pygame.Rect(self.x, self.y1, data_wall_width, data_wall_height))
         pygame.draw.rect(screen, "white",
                          pygame.Rect(self.x, self.y2 + space_between_columns, data_wall_width, data_wall_height))
+        pygame.draw.rect(screen, "blue",
+                         pygame.Rect(self.x, self.top_y2, data_wall_width, 1))
+        pygame.draw.rect(screen, "blue",
+                         pygame.Rect(self.x, self.bot_y1, data_wall_width, 1))
 
     def update(self):
         if self.is_cracked: return

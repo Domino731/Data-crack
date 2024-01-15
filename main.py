@@ -6,7 +6,7 @@ from data_wall import DataWall, create_random_wall_x
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
 CONTAINER_PADDING = 30
 BRIDGE_HEIGHT = 30
-WALLS_AMOUNT = 2
+WALLS_AMOUNT = 15
 SPACE_BETWEEN_WALLS = 40
 START_X = 40
 
@@ -31,7 +31,8 @@ container_height = SCREEN_HEIGHT - CONTAINER_PADDING
 
 # Bridge setup
 bridge_offset_y = (SCREEN_HEIGHT / 2) - 15
-
+bridge_y1, bridge_y2 = bridge_offset_y - 5, bridge_offset_y + BRIDGE_HEIGHT + 5
+bridge_range = range(int(bridge_y1), int(bridge_y2))
 
 def draw_container():
     pygame.draw.rect(
@@ -46,7 +47,10 @@ def draw_bridge():
         screen, "red",
         pygame.Rect(container_offset, bridge_offset_y, container_width, BRIDGE_HEIGHT)
     )
-
+    pygame.draw.rect(screen, "yellow",
+                     pygame.Rect(container_offset, bridge_y1, container_width, 1))
+    pygame.draw.rect(screen, "yellow",
+                     pygame.Rect(container_offset, bridge_y2, container_width, 1))
 
 def create_data_walls():
     data_walls = []
@@ -83,13 +87,9 @@ class Game:
 
     def check_if_data_crack(self):
         y1, y2 = self.current_wall.top_y2, self.current_wall.bot_y1
-        bridge_y1, bridge_y2 = bridge_offset_y - 10, bridge_offset_y + BRIDGE_HEIGHT + 10
-        bridge_range = range(int(bridge_y1), int(bridge_y2))
+        wall_range = range(y1, y2)
 
-        print(y1, y2)
-        print("range: ", bridge_range)
-
-        if y1 < bridge_y1 and bridge_y2 > y2:
+        if bridge_y1 in wall_range and bridge_y2 in wall_range:
             self.current_wall.is_cracked = True
             self.current_wall_index += 1
             if self.current_wall_index < len(self.data_walls):
